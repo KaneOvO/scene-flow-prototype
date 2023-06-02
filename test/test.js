@@ -1,4 +1,5 @@
 //用于测试的代码
+//add some bugs
 function getGameDataExample() {
     return gameData.floor.one.enemy1.hp;
 }

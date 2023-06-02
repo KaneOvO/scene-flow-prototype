@@ -76,7 +76,6 @@ class Base extends GameScene {
         //记录当前场景的回合数
         this.scene_turn = 1;
         
-
         //存储玩家选项
         this.player_choice = "";
 

@@ -1,0 +1,15 @@
+{
+    "//文件描述": "用于存放玩家数据",
+    "//调用方式": "例子:saveData.player.hp",
+    "player": {
+        "hp": 5,
+        "shield": false,
+        "sword": 0,
+        "currentPosition": {
+            "floor": "one",
+            "scene": 1,
+            "scene_turn": 1
+        }
+    },
+    "elf": false
+}

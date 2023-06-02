@@ -80,9 +80,6 @@ class Base extends GameScene {
         //存储玩家选项
         this.player_choice = "";
 
-        //定义文本路径设置的快捷路径
-        dataPath = gameData.floor[`${this.floor}`][`level${this.level}`];
-
         //创建可拖动卡片
         this.card = this.createCard("card1");
     }

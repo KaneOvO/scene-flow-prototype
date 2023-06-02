@@ -13,7 +13,7 @@ class Base extends GameScene {
         this.load.image("giant", "assets/giant.png");
         this.load.image("dragon_normal", "assets/dragon_normal.png");
         this.load.image("dragon_berserk", "assets/dragon_berserk.png");
-        this.load.image("men", "assets/men.png")
+        this.load.image("men", "assets/men.png");
         
     }
 
@@ -81,7 +81,7 @@ class Base extends GameScene {
         this.player_choice = "";
 
         //定义文本路径设置的快捷路径
-        
+        dataPath = gameData.floor[`${this.floor}`][`level${this.level}`];
 
         //创建可拖动卡片
         this.card = this.createCard("card1");

@@ -3,24 +3,18 @@ class firstFloorLevel2 extends Base {
         super("floor one level 2", "door")
     }
 
-    exPreload(){
-        this.load.image("door","card1.png");
-        this.load.image("card1", "card1.png");
-        this.load.image("card2", "card2.png");
-
-    }
-
     onEnter(){
-
-        this.changeText(this.eventText,`You have arrived at the first floor of the dungeon.\nImmediately, you are attacked by a monster.`);
-        this.left_choice_text = "Attack the monster";
-        this.right_choice_text = "Attack the monster";
-        this.card = this.createCard("door");
+        game.sound.stopAll();
+        this.bgm.play();
+        this.changeText(this.eventText, dataPath.eventText);
+        this.left_choice_text = dataPath.left;
+        this.right_choice_text = dataPath.right;
+        this.card.setTexture("gate");
         this.dragrotate(this.card); 
     }
 
     judgeChoice(){
-        this.rotateOutAndMakeNewCard("door");
+        this.rotateOutAndMakeNewCard("gate");
         this.gotoScene("floor one level 3");
     }
 }

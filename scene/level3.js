@@ -1,7 +1,7 @@
 class Level3 extends Base {
     constructor(){
         
-        super("level3","level3")
+        super("floor four level 4","level3")
     }
 
     onEnter() {
@@ -10,10 +10,15 @@ class Level3 extends Base {
         this.left_choice_text = `return to main menu`
         this.right_choice_text = `return to main menu`
 
-        this.changeText(this.eventText, `Third Level
-Game End`);
+        this.changeText(this.eventText, `Dungeon third Level, battle with dragon
+
+Click the number key 9 to enter the bad ending
+
+Click the number key 0 to enter the true ending`);
 
         this.dragrotate(this.card);
+
+        this.card.setTexture("dragon_normal");
 
         this.scene_turn = 1;
 

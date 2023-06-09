@@ -19,23 +19,26 @@ class GameScene extends Phaser.Scene {
             }
         }
         this.level = parseInt(key.replace(/[^0-9]/ig, ""));
-        //同时自动更新当前玩家位置信息
-        
     }
 
     preload() {
         this.load.image("gear", "assets/gear.png");
+        this.load.video("background3", "assets/Dragon_attacks_village.mp4");
         this.load.json("gameData", "json/InGameData.json");
-        this.load.audio('doorOpen', 'assets/doorOpen.ogg');
-        this.load.audio('unlock', 'assets/unlock.ogg');
-        this.load.audio("chestCreak","assets/chestCreak.wav")
+        this.load.audio('doorOpen', 'assets/doorOpen.mp3');
+        this.load.audio('unlock', 'assets/unlock.mp3');
+        this.load.audio("chestCreak", "assets/chestCreak.wav")
+        this.load.audio("peacefulPlace", "assets/peacefulPlace.mp3")
+        this.load.audio("Menu_loop", "assets/Menu_loop.mp3")
+        this.load.audio("battleThemeA", "assets/battleThemeA.mp3")
+        this.load.audio("theLastEncounter", "assets/TheLastEncounter.mp3")
+        this.load.audio("cardSound", "assets/mixkit-game-ball-tap-2073.wav")
+        this.load.audio("The Fall of Arcana", "assets/The Fall of Arcana.mp3")
 
         this.exPreload();
     }
 
     create() {
-
-        this.graphics = this.add.graphics();
 
         //设置编写游戏时常用的数据
         this.setShortCut();
@@ -47,31 +50,9 @@ class GameScene extends Phaser.Scene {
         this.loadTimer();
 
         //加载额外函数
-        this.exCreate();
+        this.exCreate()
 
-        //开门音效
-        this.openDoor = this.sound.add(
-            'doorOpen', 
-            { 
-                loop: false,
-                rate: 0.5,
-            }
-        );
 
-        //解锁音效
-        this.unlock = this.sound.add(
-            'unlock', 
-            { 
-                loop: false,
-            }
-        );
-
-        this.chestCreak = this.sound.add(
-            'chestCreak', 
-            { 
-                loop: false,
-            }
-        );
     }
 
     //设置编写游戏时常用的数据
@@ -88,6 +69,98 @@ class GameScene extends Phaser.Scene {
         //获得json中的数据,并存储
         gameData = this.cache.json.get('gameData');
 
+        //开门音效
+        this.openDoor = this.sound.add(
+            'doorOpen',
+            {
+                loop: false,
+                rate: 0.5,
+            }
+        );
+
+        //解锁音效
+        this.unlock = this.sound.add(
+            'unlock',
+            {
+                loop: false,
+            }
+        );
+
+        //打开宝箱音效
+        this.chestCreak = this.sound.add(
+            'chestCreak',
+            {
+                loop: false,
+            }
+        );
+
+        //卡牌判定音效
+        this.cardSound = this.sound.add(
+            'cardSound',
+            {
+                loop: false,
+                volume: 0.5,
+            }
+        );
+
+        //背景音乐
+        this.bgm = this.sound.add(
+            'peacefulPlace',
+            {
+                loop: true,
+                volume: 0.2,
+                fadeIn: 1000,
+                fadeOut: 1000,
+            }
+        );
+
+
+
+        //战斗音乐（龙）
+        this.battleMusicD = this.sound.add(
+            'battleThemeA',
+            {
+                loop: true,
+                volume: 0.2,
+                fadeIn: 1000,
+                fadeOut: 1000,
+            }
+        );
+
+        //战斗音乐（普通）
+        this.battleMusicN = this.sound.add(
+            'theLastEncounter',
+            {
+                loop: true,
+                volume: 0.2,
+                fadeIn: 1000,
+                fadeOut: 1000,
+            }
+        );
+
+        //主菜单bgm
+        this.bgm2 = this.sound.add(
+            'Menu_loop',
+            {
+                loop: true,
+                volume: 0.2,
+                fadeIn: 1000,
+                fadeOut: 1000,
+            }
+        );
+
+        //开场bgm
+        this.bgm3 = this.sound.add(
+            'The Fall of Arcana',
+            {
+                loop: true,
+                volume: 0.2,
+                fadeIn: 1000,
+                fadeOut: 1000,
+            }
+        );
+
+
         //更多的shortcut
         this.exShortCut();
     }
@@ -95,7 +168,6 @@ class GameScene extends Phaser.Scene {
     //加载游戏UI
     loadUI() {
 
-        //console.log(this.gameData.title);
 
         //放置设置按钮并具有如下功能：1.返回游戏 2.返回标题 3.转到游戏设置 4.全屏（可选：5.保存进度 6.加载进度） 
         this.settingGear = this.add.sprite(
@@ -114,18 +186,18 @@ class GameScene extends Phaser.Scene {
                 this.gearSpin.pause();
             })
             .on('pointerup', () => {
-                //console.log(this.sceneKey);
 
                 //暂停当前场景并跳转至setting场景，
                 this.scene.pause(this.sceneKey);
+                console.log(saveData.volume);
 
                 //如果setting不存在则创建并插入setting场景
                 if (!this.scene.get("setting")) {
-                    this.scene.add("setting", SettingScene, true, { currentScene: this.sceneKey, });
+                    this.scene.add("setting", SettingScene, true, { currentScene: this.scene, });
                 }
                 else {
                     //如果setting场景存在，则直接访问setting
-                    this.scene.launch("setting", { currentScene: this.sceneKey });
+                    this.scene.launch("setting", { currentScene: this.scene });
                 }
             });
 
@@ -147,7 +219,6 @@ class GameScene extends Phaser.Scene {
             callback: () => {
                 if (this.scene.isActive(this.sceneKey)) {
                     Timer += 1;
-                    //console.log(`已在${this.sceneKey}待机了${Timer}秒`);
                 }
             },
             callbackScope: this,
@@ -155,15 +226,6 @@ class GameScene extends Phaser.Scene {
         });
 
         Timer = 0;
-    }
-
-    update()
-    {
-        this.openDoor.volume = Volume;
-        this.unlock.volume = Volume;
-        this.chestCreak.volume = Volume;
-
-        this.exUpdate();
     }
 
     //当子类没有ex函数时报错
@@ -178,23 +240,21 @@ class GameScene extends Phaser.Scene {
     exShortCut() {
         console.warn(`${this.sceneKey}没有设置exShortCut()`);
     }
-    
-    exUpdate()
-    {
+
+    exUpdate() {
 
     }
 
-    
+
 }
 
 class SettingScene extends Phaser.Scene {
 
     init(data) {
-        this.currentScene = data.currentScene || "";
+        this.currentScene = data.currentScene || null;
     }
 
     create(data) {
-
         this.cx = this.cameras.main.centerX;
         this.cy = this.cameras.main.centerY;
 
@@ -257,7 +317,9 @@ class SettingScene extends Phaser.Scene {
                 }
                 else {
                     this.cameras.main.fade(500, 0, 0, 0);
-                    this.scene.stop(data.currentScene);
+                    writeSaveData();
+                    this.scene.stop(data.currentScene.key);
+                    game.sound.stopAll();
                     this.scene.start("title");
                 }
             });
@@ -266,7 +328,7 @@ class SettingScene extends Phaser.Scene {
         this.VolumeText = this.add.text(
             this.cx,
             this.cy - 50,
-            `Volume:${Math.floor(Volume * 100)}%`
+            `Volume:${Math.floor(saveData.volume * 100)}%`
         )
             .setColor("#000000")
             .setOrigin(0.5)
@@ -276,9 +338,9 @@ class SettingScene extends Phaser.Scene {
 
         //设置音量调节栏
         this.VolumeSlider = this.add.rectangle(this.cx, this.cy + 50, 250, 12.5).setFillStyle(0x444444).setOrigin(0.5).setInteractive();
-        this.VolumeBar = this.add.rectangle(200 * Volume + this.cx - 100, this.cy + 50, 20, 40).setFillStyle(0x444444).setOrigin(0.5);
+        this.VolumeBar = this.add.rectangle(200 * saveData.volume + this.cx - 100, this.cy + 50, 20, 40).setFillStyle(0x444444).setOrigin(0.5);
         //音量设置公式
-        Volume = (this.VolumeBar.x - this.cx + 100) / 200;
+        saveData.volume = (this.VolumeBar.x - this.cx + 100) / 200;
 
         this.VolumeBar.setInteractive({ draggable: true });
         this.input.setDraggable(this.VolumeBar);
@@ -292,8 +354,9 @@ class SettingScene extends Phaser.Scene {
             }
 
             this.VolumeBar.setPosition(dragX, this.cy + 50);
-            Volume = (dragX - this.cx + 100) / 200;
-            this.VolumeText.setText(`Volume:${Math.floor(Volume * 100)}%`);
+            saveData.volume = (dragX - this.cx + 100) / 200;
+            game.sound.volume = saveData.volume;
+            this.VolumeText.setText(`Volume:${Math.floor(saveData.volume * 100)}%`);
         });
 
         this.VolumeSlider.on("pointerdown", (pointer) => {
@@ -307,8 +370,9 @@ class SettingScene extends Phaser.Scene {
                 this.VolumeBar.x = pointer.x;
             }
 
-            Volume = (this.VolumeBar.x - this.cx + 100) / 200;
-            this.VolumeText.setText(`Volume:${Math.floor(Volume * 100)}%`);
+            saveData.volume = (this.VolumeBar.x - this.cx + 100) / 200;
+            game.sound.volume = saveData.volume;
+            this.VolumeText.setText(`Volume:${Math.floor(saveData.volume * 100)}%`);
         });
 
         //设置返回按钮
@@ -329,16 +393,20 @@ class SettingScene extends Phaser.Scene {
                 this.BackGame.setText(`Back`).setAlpha(0.8).setScale(1).setColor("#000000");
             })
             .on("pointerup", () => {
+                writeSaveData();
                 this.scene.stop("setting");
-                this.scene.resume(data.currentScene);
+                this.scene.resume(data.currentScene.key);
             });
 
         //当玩家点击菜单外时自动关闭菜单
         this.input.on("pointerup", (pointer) => {
             if (!this.backgroundBound.getBounds().contains(pointer.x, pointer.y)) {
+                writeSaveData();
                 this.scene.stop("setting");
-                this.scene.resume(data.currentScene);
+                this.scene.resume(data.currentScene.key);
             }
         });
+
+
     }
 }

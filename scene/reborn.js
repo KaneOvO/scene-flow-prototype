@@ -4,14 +4,13 @@ class reborn extends Base {
     }
 
     onEnter() {
-        console.log("choice");
-        console.log(currentPosition);
+        //console.log(currentPosition);
         saveData.player.sword++;
         saveData.player.hp = 5;
-        this.input.enabled = false;
+        game.sound.stopAll();
         if (saveData.player.sword == 1) {
             this.card.setTexture("player");
-            this.label = false;
+            this.card.label = false;
             this.left_choice_text = "I got it.";
             this.right_choice_text = "Ok...";
             //this.changeText("You will be reborn.");
@@ -27,7 +26,6 @@ class reborn extends Base {
                     this.time.delayedCall(3000, () => {
                         this.card.dragable = true;
                         this.card.label = true;
-                        this.input.enabled = true;
                     });
                 });
             });
@@ -36,7 +34,7 @@ class reborn extends Base {
         
         }
         else {
-            console.log(currentPosition);
+            //console.log(currentPosition);
             this.scene.start(currentPosition);
         }
     }

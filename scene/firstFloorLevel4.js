@@ -3,24 +3,19 @@ class firstFloorLevel4 extends Base {
         super("floor one level 4", "maze");
     }
 
-    exPreload(){
-        this.load.image("maze","card1.png");
-        this.load.image("card1", "card1.png");
-        this.load.image("card2", "card2.png");
-
-    }
-
     onEnter(){
-        this.changeText(this.eventText, "The maze");
+        this.bgm.play({fadeIn:1000});
+
+        this.changeText(this.eventText, "You move on and come across a maze");
         this.left_choice_text = "enter the maze";
         this.right_choice_text = "enter the maze";
 
-        this.card = this.createCard("maze");
+        this.card.setTexture("maze");
         this.dragrotate(this.card);
     }
 
     judgeChoice(){
-        this.rotateOutAndMakeNewCard("giant");
+        this.rotateOutAndMakeNewCard("maze");
         this.gotoScene("floor one level 5");
     }
 }
@@ -30,20 +25,13 @@ class firstFloorLevel5 extends Base{
         super("floor one level 5", "fork");
     }
 
-    exPreload(){
-        this.load.image("fork","card1.png");
-        this.load.image("card1", "card1.png");
-        this.load.image("card2", "card2.png");
-
-    }
-
     onEnter(){
-
+        this.scene4 = this.scene.get('floor one level 4');
         this.changeText(this.eventText, "You find a fork in the road.");
         this.left_choice_text = "heads left";
         this.right_choice_text = "heads right";
 
-        this.card = this.createCard("fork");
+        this.card.setTexture("maze");
         this.dragrotate(this.card);
 
         this.scene_turn = 1;
@@ -57,12 +45,13 @@ class firstFloorLevel5 extends Base{
 
 
     enter_maze(x, choice){
-        this.rotateOutAndMakeNewCard("fork");
+        this.rotateOutAndMakeNewCard("maze");
         if(x==1){
             if(choice=="left"){
                 this.changeText(this.eventText, dataPath.eventText);
             }
             else{
+                this.card.label = false;
                 this.eventCard(dataPath.eventCard1);
                 this.time.delayedCall(3000, () => {
                     this.lose();
@@ -74,6 +63,7 @@ class firstFloorLevel5 extends Base{
                 this.changeText(this.eventText, dataPath.eventText);
             }
             else{
+                this.card.label = false;
                 this.eventCard(dataPath.eventCard2);
                 this.time.delayedCall(3000, () => {
                     this.lose();
@@ -86,6 +76,7 @@ class firstFloorLevel5 extends Base{
                 this.win();
             }
             else{
+                this.card.label = false;
                 this.eventCard(dataPath.eventCard3);
                 this.time.delayedCall(3000, () => {
                     this.lose();
@@ -103,6 +94,7 @@ class firstFloorLevel5 extends Base{
     }
 
     lose(){
+        this.scene4.bgm.stop();
         currentPosition = "floor one level 4";
         console.log(currentPosition);
         console.log("lose");

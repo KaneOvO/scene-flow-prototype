@@ -5,22 +5,22 @@ class firstFloorLevel3 extends Base {
         super("floor one level 3", "skeleton")
     }
 
-    exPreload(){
-        this.load.image("mob","card1.png");
-        this.load.image("card1", "card1.png");
-        this.load.image("card2", "card2.png");
-
-    }
-
     onEnter(){
-        
-        this.mobhp = 3;
+        this.scene1 = this.scene.get('floor one level 2');
+        this.scene1.bgm.stop();
+        this.battleMusicN.play({fadeIn:1000});
+
+        this.enemy_hp = dataPath.enemy.hp;
+        this.enemy_max_hp = dataPath.enemy.hp;
+        this.showHp();
+
         this.currentAction;
         this.scene_turn = 1;
-        this.changeText(this.eventText, `The skeleton is moving towards you`);
-        this.left_choice_text = "Attack";
-        this.right_choice_text = "Dodge";
-        this.card = this.createCard("mob");
+        this.changeText(this.eventText, dataPath.eventText1);
+        this.left_choice_text = dataPath.left;
+        this.right_choice_text = dataPath.right;
+        this.eventCard(dataPath.eventCard);
+        this.card.setTexture("skeleton");
         this.dragrotate(this.card); 
     }
 
@@ -28,61 +28,56 @@ class firstFloorLevel3 extends Base {
         console.log(`turn ${this.scene_turn}`);
         if (this.player_choice != ""){
                 console.log(`turn=${this.scene_turn} choice=${this.player_choice} `);
-                this.rotateOutAndMakeNewCard(this.card, "card1");
-                this.resettext(this.scene_turn);
+                this.rotateOutAndMakeNewCard("skeleton");
                 this.damagecalc_textchange(this.scene_turn, this.player_choice);
                 this.scene_turn++;
-                if(this.mobhp<=0){
+                if(this.enemy_hp<=0){
+                    this.card.label = false;
                     console.log("win");
                     this.win();
                 }
                 else if (saveData.player.hp <= 0) {
+                    this.card.label = false;
                     this.lose();
                 }
-        }
-    }
-
-    resettext(num){
-        if(num%2 != 0){
-            this.changeText(this.eventText, `The skeleton is moving towards you`);
-        }
-        else{
-            this.changeText(this.eventText, `The skeleton is trying to attack you`);
         }
     }
 
     damagecalc_textchange(num, choice){
         if(num%2 == 0){
             if(choice=="left") {
-                this.rotateOutAndMakeNewCard("mob");
+                this.rotateOutAndMakeNewCard("skeleton");
                 saveData.player.hp-=1;
-                this.mobhp -=1;
-                this.changeText(this.eventText, `You took 1 damage!\nAnd you dealt 1 damage!`);
+                this.enemy_hp -=1;
+                this.shakeTween(this.cameras.main);
+                this.changeText(this.eventText, dataPath.eventText2);
+                this.renewHp();
             }
             else {
-                this.rotateOutAndMakeNewCard("mob");
-                this.changeText(this.eventText, `You dodged the attack!`);
+                this.rotateOutAndMakeNewCard("skeleton");
+                this.changeText(this.eventText, dataPath.eventText3);
             }
         }
         else{
             if(choice=="left") {
-                this.rotateOutAndMakeNewCard("mob");
-                this.mobhp -=1;
-                this.changeText(this.eventText, `You dealt 1 damage!`);
+                this.rotateOutAndMakeNewCard("skeleton");
+                this.enemy_hp -=1;
+                this.changeText(this.eventText, dataPath.eventText4);
+                this.renewHp();
             }
             else{
-                this.rotateOutAndMakeNewCard("mob");
-                this.changeText(this.eventText, `Nothing happened.`);
+                this.rotateOutAndMakeNewCard("skeleton");
+                this.changeText(this.eventText, dataPath.eventText5);
             }
         }       
     }
 
     win(){
-        this.changeText(this.eventText, "you win");
-        this.left_choice_text = "next";
-        this.right_choice_text = "next";
-        console.log("win");
-        this.gotoScene("floor one level 4");
+        this.eventCard(dataPath.eventCard1);
+        this.time.delayedCall(3000, () => {
+            this.battleMusicN.stop();
+            this.gotoScene("floor one level 4");
+        });
     }
 
     lost() {
@@ -90,6 +85,7 @@ class firstFloorLevel3 extends Base {
         this.left_choice_text = "next";
         this.right_choice_text = "next";
         console.log("lost");
+        this.battleMusicN.stop();
         this.gotoScene("floor one level 2");
     }
 }

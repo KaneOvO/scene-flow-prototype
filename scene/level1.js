@@ -1,7 +1,7 @@
 class Level1 extends Base {
     constructor(){
         
-        super("level1","level1")
+        super("floor four level 2","level1")
     }
 
     onEnter() {
@@ -10,7 +10,13 @@ class Level1 extends Base {
         this.left_choice_text = `go to next level`
         this.right_choice_text = `go to next level`
 
-        this.changeText(this.eventText, `First Level`);
+        this.changeText(this.eventText, `Dungeon first level, Through the  maze, Drag the card left and right to move to the next scene
+
+Click the number key 9 to enter the bad ending
+
+Click the number key 0 to enter the true ending`);
+
+        this.card.setTexture("maze");
 
         this.dragrotate(this.card);
 
@@ -34,7 +40,7 @@ class Level1 extends Base {
         this.openDoor.play();
 
         this.time.delayedCall(1000, () => {
-            this.gotoScene("level2");
+            this.gotoScene("floor four level 3");
         })    
     }
 

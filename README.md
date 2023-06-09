@@ -2,6 +2,12 @@
 
 A prototype of a game scene flow, simulating the general flow of the game
 
+Scene types: 
+
+After the opening animation the player enters the main menu, in the main menu you can enter the game scene, credits scene. 
+
+click on the gear in the upper right corner to enter the setup scene
+
 Communication between scenes:
 
 We record several variables in SaveData.json that can be recorded in-game, including the player's HP, and whether certain items were obtained, 

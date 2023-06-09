@@ -4,7 +4,7 @@ A prototype of a game scene flow, simulating the general flow of the game
 
 Communication between scenes:
 
-We record several variables in SaveData.json that can be recorded in-game, including the player's blood level, and whether certain items were obtained, 
+We record several variables in SaveData.json that can be recorded in-game, including the player's HP, and whether certain items were obtained, 
 
 whether the save sprite event was reached, and the in-game volume setting.
 
